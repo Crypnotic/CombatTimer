@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.crypnotic</groupId>
 	<artifactId>CombatTimer</artifactId>
-	<version>2.0.2</version>
+	<version>2.0.3</version>
 	<name>CombatTimer</name>
 	<description>CombatTimer aims to provide a lightweight, yet stylish combat tag system</description>
 
@@ -21,6 +21,11 @@
 		<repository>
 			<id>bstats-repo</id>
 			<url>http://repo.bstats.org/content/repositories/releases/</url>
+		</repository>
+
+		<repository>
+			<id>inventive-repo</id>
+			<url>https://repo.inventivetalent.org/content/groups/public/</url>
 		</repository>
 	</repositories>
 
@@ -50,6 +55,12 @@
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
 			<version>1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.inventivetalent.spiget-update</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>1.4.0</version>
 		</dependency>
 	</dependencies>
 
@@ -82,12 +93,17 @@
 					<artifactSet>
 						<includes>
 							<include>org.bstats:*</include>
+							<include>org.inventivetalent.spiget-update:*</include>
 						</includes>
 					</artifactSet>
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
 							<shadedPattern>me.crypnotic.combattimer.stats</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>org.inventivetalent</pattern>
+							<shadedPattern>me.crypnotic.combattimer.updater</shadedPattern>
 						</relocation>
 					</relocations>
 				</configuration>

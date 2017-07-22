@@ -5,6 +5,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.inventivetalent.update.spiget.SpigetUpdate;
+import org.inventivetalent.update.spiget.UpdateCallback;
+import org.inventivetalent.update.spiget.comparator.VersionComparator;
 
 import lombok.Getter;
 import me.crypnotic.combattimer.api.CombatPlayer;
@@ -52,6 +55,24 @@ public class CombatTimer extends JavaPlugin {
 		}
 
 		new Metrics(this);
+
+		new SpigetUpdate(this, 22722).setVersionComparator(VersionComparator.SEM_VER)
+				.checkForUpdate(new UpdateCallback() {
+					@Override
+					public void upToDate() {
+						/* NOOP */
+					}
+
+					@Override
+					public void updateAvailable(String version, String url, boolean direct) {
+						getLogger().info("------------------------------------");
+						getLogger().info("A new version of CombatTimer is available: " + version);
+						if (direct) {
+							getLogger().info("Download URL: " + url);
+						}
+						getLogger().info("------------------------------------");
+					}
+				});
 	}
 
 	@Override
