@@ -1,0 +1,11 @@
+combattime: 30
+command-whitelist:
+  - 'combattimer'
+Permissions:
+  bypass: 'combattimer.bypass'
+Messages:
+  player-tagged: '&cYou have been combat tagged!'
+  player-untagged: '&cYour combat timer has expired!'
+  player-reset: '&cYour combat timer has been reset!'
+  player-combattime: '&8Combat Timer - &c{time} &8seconds left.'
+  command-blacklisted: '&cYou may not use that command.'

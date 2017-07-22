@@ -1,0 +1,11 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+authors: [Crypnotic]
+main: me.crypnotic.combattimer.CombatTimer
+softdepend: [PlaceholderAPI]
+commands:
+  combattimer:
+    description: The main command used to check your time, check the plugin version, and reload the config.
+    usage: /ct (version|reload)
+    aliases: [ct]
