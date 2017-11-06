@@ -1,6 +1,7 @@
 combattime: 30
 command-whitelist:
   - 'combattimer'
+restrict-flight: true
 Permissions:
   bypass: 'combattimer.bypass'
 Messages:

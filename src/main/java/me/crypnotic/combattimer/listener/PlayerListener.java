@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 import me.crypnotic.combattimer.CombatTimer;
 import me.crypnotic.combattimer.api.CombatPlayer;
@@ -89,6 +90,19 @@ public class PlayerListener implements Listener {
 				Messenger.sendMessage(player.getHandle(), configManager.getMessage("command-blacklisted"));
 				event.setCancelled(true);
 			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
+		if (!configManager.isRestrictFlight()) {
+			return;
+		}
+		Player player = event.getPlayer();
+		CombatPlayer combatPlayer = combatManager.get(player.getUniqueId());
+		if (combatPlayer != null && combatPlayer.getCombatTime() > 0) {
+			player.setFlying(false);
+			
 		}
 	}
 }

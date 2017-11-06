@@ -2,8 +2,10 @@ package me.crypnotic.combattimer.manager;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,6 +26,8 @@ public class ConfigManager {
 	private String bypassPermission;
 	@Getter
 	private long combatTime;
+	@Getter
+	private boolean restrictFlight;
 	@Getter
 	private List<String> commandWhitelist;
 	private HashMap<String, String> messages;
@@ -61,16 +65,26 @@ public class ConfigManager {
 		return reload();
 	}
 
-	public void load() {
-		this.bypassPermission = config.getString("Permissions.bypass");
-		this.combatTime = config.getLong("combattime");
-		this.commandWhitelist = config.getStringList("command-whitelist");
+	@SuppressWarnings("unchecked")
+	public boolean load() {
+		this.bypassPermission = config.getString("Permissions.bypass", "combattimer.bypass");
+		this.combatTime = config.getLong("combattime", 30);
+		this.commandWhitelist = (List<String>) config.getList("command-whitelist", new ArrayList<String>());
+		this.restrictFlight = config.getBoolean("restrict-flight", true);
 		this.messages = new HashMap<String, String>();
 
 		ConfigurationSection section = config.getConfigurationSection("Messages");
 		for (String key : section.getKeys(false)) {
 			messages.put(key, section.getString(key));
 		}
+
+		try {
+			config.save(file);
+		} catch (IOException exception) {
+			exception.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	public boolean reload() {
