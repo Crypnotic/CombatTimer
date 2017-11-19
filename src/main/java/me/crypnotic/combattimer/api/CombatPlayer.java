@@ -12,13 +12,16 @@ import me.crypnotic.combattimer.CombatTimer;
 @AllArgsConstructor
 public class CombatPlayer {
 
-	@Getter
-	private UUID uuid;
-	@Getter
-	@Setter
-	private Long combatTime;
+    @Getter
+    private UUID uuid;
+    @Getter
+    @Setter
+    private Long combatTime;
+    @Getter
+    @Setter
+    private boolean allowedFlight;
 
-	public Player getHandle() {
-		return CombatTimer.getInstance().getServer().getPlayer(uuid);
-	}
+    public Player getHandle() {
+        return CombatTimer.getInstance().getServer().getPlayer(uuid);
+    }
 }

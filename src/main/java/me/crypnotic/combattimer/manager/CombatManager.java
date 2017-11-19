@@ -15,71 +15,76 @@ import me.crypnotic.combattimer.util.Messenger;
 
 public class CombatManager {
 
-	private CombatTimer plugin;
-	private ConfigManager configManager;
-	@Getter
-	private HashMap<UUID, CombatPlayer> tagged;
-	private BukkitTask timer;
+    private CombatTimer plugin;
+    private ConfigManager configManager;
+    @Getter
+    private HashMap<UUID, CombatPlayer> tagged;
+    private BukkitTask timer;
 
-	public CombatManager(CombatTimer plugin) {
-		this.plugin = plugin;
-		this.configManager = plugin.getConfigManager();
-		this.tagged = new HashMap<UUID, CombatPlayer>();
-	}
+    public CombatManager(CombatTimer plugin) {
+        this.plugin = plugin;
+        this.configManager = plugin.getConfigManager();
+        this.tagged = new HashMap<UUID, CombatPlayer>();
+    }
 
-	public CombatPlayer get(UUID uuid) {
-		return tagged.get(uuid);
-	}
+    public CombatPlayer get(UUID uuid) {
+        return tagged.get(uuid);
+    }
 
-	public void setTagged(Player player, Long time) {
-		UUID uuid = player.getUniqueId();
-		if (isTagged(uuid)) {
-			get(uuid).setCombatTime(time);
-			Messenger.sendActionBar(player, configManager.getMessage("player-reset"));
-			checkTimer();
-		} else {
-			tagged.put(uuid, new CombatPlayer(uuid, time));
-			Messenger.sendActionBar(player, configManager.getMessage("player-tagged"));
-			checkTimer();
-		}
-	}
+    public void setTagged(Player player, Long time) {
+        UUID uuid = player.getUniqueId();
+        if (isTagged(uuid)) {
+            get(uuid).setCombatTime(time);
+            Messenger.sendActionBar(player, configManager.getMessage("player-reset"));
+            checkTimer();
+        } else {
+            tagged.put(uuid, new CombatPlayer(uuid, time, player.getAllowFlight()));
+            Messenger.sendActionBar(player, configManager.getMessage("player-tagged"));
+            checkTimer();
+        }
 
-	public void sendCombatMessage(UUID uuid, String key) {
-		String message = configManager.getMessage(key);
-		if (message == null || key == null) {
-			return;
-		}
-		message = message.replace("{time}", "" + (tagged.containsKey(uuid) ? tagged.get(uuid).getCombatTime() : 0));
+        if (configManager.isRestrictFlight() && player.isFlying()) {
+            player.setFlying(false);
+            player.setAllowFlight(false);
+        }
+    }
 
-		Messenger.sendMessage(Bukkit.getPlayer(uuid), message);
-	}
+    public void sendCombatMessage(UUID uuid, String key) {
+        String message = configManager.getMessage(key);
+        if (message == null || key == null) {
+            return;
+        }
+        message = message.replace("{time}", "" + (tagged.containsKey(uuid) ? tagged.get(uuid).getCombatTime() : 0));
 
-	public void sendCombatActionBar(UUID uuid, String key) {
-		String message = configManager.getMessage(key);
-		if (message == null || key == null) {
-			return;
-		}
-		message = message.replace("{time}", "" + (tagged.containsKey(uuid) ? tagged.get(uuid).getCombatTime() : 0));
+        Messenger.sendMessage(Bukkit.getPlayer(uuid), message);
+    }
 
-		Messenger.sendActionBar(Bukkit.getPlayer(uuid), message);
-	}
+    public void sendCombatActionBar(UUID uuid, String key) {
+        String message = configManager.getMessage(key);
+        if (message == null || key == null) {
+            return;
+        }
+        message = message.replace("{time}", "" + (tagged.containsKey(uuid) ? tagged.get(uuid).getCombatTime() : 0));
 
-	private void checkTimer() {
-		if (timer == null && tagged.size() >= 1) {
-			timer = plugin.getServer().getScheduler().runTaskTimer(plugin, new CombatTask(plugin), 0L, 20L);
-		}
-		if (timer != null && tagged.size() <= 0) {
-			timer.cancel();
-			timer = null;
-		}
-	}
+        Messenger.sendActionBar(Bukkit.getPlayer(uuid), message);
+    }
 
-	public void remove(UUID uuid) {
-		tagged.remove(uuid);
-		checkTimer();
-	}
+    private void checkTimer() {
+        if (timer == null && tagged.size() >= 1) {
+            timer = plugin.getServer().getScheduler().runTaskTimer(plugin, new CombatTask(plugin), 0L, 20L);
+        }
+        if (timer != null && tagged.size() <= 0) {
+            timer.cancel();
+            timer = null;
+        }
+    }
 
-	public boolean isTagged(UUID uuid) {
-		return tagged.containsKey(uuid);
-	}
+    public void remove(UUID uuid) {
+        tagged.remove(uuid);
+        checkTimer();
+    }
+
+    public boolean isTagged(UUID uuid) {
+        return tagged.containsKey(uuid);
+    }
 }

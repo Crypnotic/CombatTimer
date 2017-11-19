@@ -10,28 +10,30 @@ import me.crypnotic.combattimer.manager.CombatManager;
 
 public class CombatTask implements Runnable {
 
-	private CombatManager combatManager;
+    private CombatManager combatManager;
 
-	public CombatTask(CombatTimer plugin) {
-		this.combatManager = plugin.getCombatManager();
-	}
+    public CombatTask(CombatTimer plugin) {
+        this.combatManager = plugin.getCombatManager();
+    }
 
-	public void run() {
-		List<UUID> untagged = new ArrayList<UUID>();
-		for (CombatPlayer player : combatManager.getTagged().values()) {
-			if (player.getCombatTime() > 0) {
-				player.setCombatTime(player.getCombatTime() - 1);
+    public void run() {
+        List<UUID> untagged = new ArrayList<UUID>();
+        for (CombatPlayer player : combatManager.getTagged().values()) {
+            if (player.getCombatTime() > 0) {
+                player.setCombatTime(player.getCombatTime() - 1);
 
-				combatManager.sendCombatActionBar(player.getUuid(), "player-combattime");
-			} else {
-				combatManager.sendCombatActionBar(player.getUuid(), "player-untagged");
-				
-				untagged.add(player.getUuid());
-			}
-		}
-		for (UUID uuid : untagged) {
-			combatManager.remove(uuid);
-		}
-		untagged.clear();
-	}
+                combatManager.sendCombatActionBar(player.getUuid(), "player-combattime");
+            } else {
+                combatManager.sendCombatActionBar(player.getUuid(), "player-untagged");
+
+                untagged.add(player.getUuid());
+
+                player.getHandle().setAllowFlight(player.isAllowedFlight());
+            }
+        }
+        for (UUID uuid : untagged) {
+            combatManager.remove(uuid);
+        }
+        untagged.clear();
+    }
 }
