@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.crypnotic</groupId>
 	<artifactId>CombatTimer</artifactId>
-	<version>2.1.1</version>
+	<version>2.1.2</version>
 	<name>CombatTimer</name>
 	<description>CombatTimer aims to provide a lightweight, yet stylish combat tag system</description>
 
