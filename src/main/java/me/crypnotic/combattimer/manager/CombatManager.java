@@ -43,7 +43,7 @@ public class CombatManager {
             checkTimer();
         }
 
-        if (configManager.isRestrictFlight() && player.isFlying()) {
+        if (configManager.isRestrictFlight() && player.getAllowFlight()) {
             player.setFlying(false);
             player.setAllowFlight(false);
         }
